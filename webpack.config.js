@@ -20,7 +20,8 @@ if (!dev) {
 		loader: 'postcss-loader',
 		options: 
 		{
-			plugins: (loader) => [
+			ident 	: 'postcss',
+			plugins : (loader) => [
 				require('autoprefixer')({
 					browserlist: ["last 2 versions", "ie > 8"]
 				}),
