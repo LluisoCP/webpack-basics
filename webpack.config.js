@@ -23,7 +23,7 @@ if (!dev) {
 			ident 	: 'postcss',
 			plugins : (loader) => [
 				require('autoprefixer')({
-					browserlist: ["last 2 versions", "ie > 8"]
+					browsers: ["last 2 versions", "ie > 8"]
 				}),
 				require('cssnano')()
 		    ]
