@@ -1,10 +1,11 @@
 const path 		= require('path')
 const UglifyJS 	= require('uglifyjs-webpack-plugin')
+const ExtractCSSPlugin = require('mini-css-extract-plugin');
 
 const dev = process.env.NODE_ENV == "dev"
 
 let CSSLoaders = [
-	'style-loader',
+	ExtractCSSPlugin.loader,
 	{
 		loader: 'css-loader',
 		options: 
@@ -23,7 +24,7 @@ if (!dev) {
 			ident 	: 'postcss',
 			plugins : (loader) => [
 				require('autoprefixer')({
-					browsers: ["last 2 versions", "ie > 8"]
+					overrideBrowserslist: ['last 2 versions', 'ie > 8']
 				}),
 				require('cssnano')()
 		    ]
@@ -34,7 +35,7 @@ if (!dev) {
 
 let config =
 {
-	mode 	: "development",
+	mode 	: 'none', 
 	entry	: './assets/js/app.js',
 	output	:
 	{
@@ -72,7 +73,9 @@ let config =
 		]
 	},
 	plugins: [
-		
+		new ExtractCSSPlugin({
+			filename: '[name].css'
+		})
 	],
 	optimization:
 	{
