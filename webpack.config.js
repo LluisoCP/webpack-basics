@@ -1,6 +1,8 @@
-const path 		= require('path')
-const UglifyJS 	= require('uglifyjs-webpack-plugin')
-const ExtractCSSPlugin = require('mini-css-extract-plugin');
+const path 						= require('path')
+const UglifyJS 					= require('uglifyjs-webpack-plugin')
+const ExtractCSSPlugin 			= require('mini-css-extract-plugin')
+const ManifestPlugin 			= require('webpack-manifest-plugin')
+const { CleanWebpackPlugin }	= require('clean-webpack-plugin')
 
 const dev = process.env.NODE_ENV == "dev"
 
@@ -40,7 +42,7 @@ let config =
 	output	:
 	{
 		path		: path.resolve('./dist'),
-		filename	: 'bundle.js',
+		filename	: dev ? '[name].js' : '[name].[chunkhash:8].js',
 		publicPath	: './dist/'
 	},
 	watch: dev,
@@ -74,7 +76,7 @@ let config =
 	},
 	plugins: [
 		new ExtractCSSPlugin({
-			filename: '[name].css'
+			filename: dev ? '[name].css' : '[name].[contenthash:8].css'
 		})
 	],
 	optimization:
@@ -83,9 +85,18 @@ let config =
 	}
 }
 if(!dev) {
-	config.plugins.push(new UglifyJS({
-		extractComments	: true
-	}))
+	config.plugins.push(
+		new UglifyJS(
+		{
+			extractComments	: true
+		}),
+		new ManifestPlugin(),
+		new CleanWebpackPlugin(
+		{
+			root	: path.resolve('./'),
+			verbose	: true,
+			dry		: false
+		}))
 }
 
 module.exports = config
