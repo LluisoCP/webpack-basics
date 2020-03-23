@@ -7,12 +7,18 @@ const { CleanWebpackPlugin }	= require('clean-webpack-plugin')
 const dev = process.env.NODE_ENV == "dev"
 
 let CSSLoaders = [
-	ExtractCSSPlugin.loader,
+	{
+		loader : ExtractCSSPlugin.loader,
+		options:
+		{
+			publicPath 		: './'
+		}
+	},
 	{
 		loader: 'css-loader',
 		options: 
 		{
-			importLoaders: 1
+			importLoaders	: 1
 		} 
 	}
 ]
@@ -38,7 +44,10 @@ if (!dev) {
 let config =
 {
 	mode 	: 'none', 
-	entry	: './assets/js/app.js',
+	entry	:
+	{
+		app: ['./assets/js/app.js', './assets/scss/app.scss']
+	},
 	output	:
 	{
 		path		: path.resolve('./dist'),
@@ -71,7 +80,36 @@ let config =
 			{
 				test: /\.scss$/,
 				use : [...CSSLoaders, 'sass-loader']
-			}
+			},
+			{
+				test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+				loader: 'file-loader',
+				options:
+				{
+					name	: '[name].[hash:8].[ext]',
+					context	: 'assets'
+				}
+			},
+			{
+		        test: /\.(png|jpe?g|gif|svg)$/i,
+		        use : [
+					{
+						loader : 'url-loader',
+						options:
+						{
+							limit: 8192,
+							name : '[name].[hash:8].[ext]'
+						},
+					},
+					{
+						loader : 'img-loader',
+						options:
+						{
+							enabled: !dev
+						}
+					}
+		        ],
+		    }
 		]
 	},
 	plugins: [
