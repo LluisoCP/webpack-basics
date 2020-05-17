@@ -1,8 +1,6 @@
 import jQuery from 'jquery'
-import * as first from './first.js'
 import * as second from './second.js'
-// import style from '../scss/style.scss'
-
+import * as first from './first.js'
 document.getElementById('load').addEventListener('click', () => {
 	import('lodash/debounce').then(debounce => {
 		jQuery(window).on('resize', debounce.default(() => console.log(window.innerHeight), 300, {

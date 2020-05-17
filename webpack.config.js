@@ -55,7 +55,16 @@ let config =
 		publicPath	: './dist/'
 	},
 	watch: dev,
-	devtool: dev && "eval-cheap-module-source-map",
+	resolve:
+	{
+		alias:
+		{
+			'@fns'	: path.resolve('./assets/js/functions/'),
+			'@uts'	: path.resolve('./assets/js/utils/'),
+			'@js'	: path.resolve('./assets/js/')
+		}
+	},
+	devtool: dev && 'source-map',
 	module:
 	{
 		rules: [
@@ -82,9 +91,9 @@ let config =
 				use : [...CSSLoaders, 'sass-loader']
 			},
 			{
-				test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-				loader: 'file-loader',
-				options:
+				test	: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+				loader 	: 'file-loader',
+				options	:
 				{
 					name	: '[name].[hash:8].[ext]',
 					context	: 'assets'
@@ -126,7 +135,14 @@ if(!dev) {
 	config.plugins.push(
 		new UglifyJS(
 		{
-			extractComments	: true
+			extractComments	: true,
+			uglifyOptions:
+			{
+				compress:
+				{
+					drop_console: true
+				}
+			}
 		}),
 		new ManifestPlugin(),
 		new CleanWebpackPlugin(
